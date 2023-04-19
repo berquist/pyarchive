@@ -9,7 +9,9 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                git 'https://github.com/berquist/libstore.git'
+                withCredentials([sshUserPrivateKey(credentialsId: 'ericjohnberquist', keyFileVariable: '')]) {
+                    git 'https://github.com/berquist/libstore.git'
+                }
                 // git 'https://github.com/berquist/libjournal.git'
                 // git 'https://github.com/berquist/libarchive.git'
 
