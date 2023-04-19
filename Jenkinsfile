@@ -14,8 +14,10 @@ pipeline {
         }
 
         stage('Test') {
-            sh 'pwd; ls -al'
-            // sh(script: 'python -m pytest -v --cov=libstore', encoding: 'UTF-8')
+            steps {
+                sh 'pwd; ls -al'
+                // sh(script: 'python -m pytest -v --cov=libstore', encoding: 'UTF-8')
+            }
         }
     }
 }
