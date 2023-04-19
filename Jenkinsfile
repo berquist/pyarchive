@@ -5,9 +5,15 @@ pipeline {
         stage('Build') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ericjohnberquist', keyFileVariable: '')]) {
-                    git 'git@github.com:berquist/libstore.git'
-                    git 'git@github.com:berquist/libjournal.git'
-                    git 'git@github.com:berquist/libarchive.git'
+                    dir('libstore') {
+                        git 'git@github.com:berquist/libstore.git'
+                    }
+                    dir('libjournal') {
+                        git 'git@github.com:berquist/libjournal.git'
+                    }
+                    dir('libarchive') {
+                        git 'git@github.com:berquist/libarchive.git'
+                    }
                 }
 
             }
