@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ericjohnberquist', keyFileVariable: '')]) {
                     dir('libstore') {
@@ -27,11 +27,30 @@ pipeline {
 
             }
         }
-
-        stage('Test') {
-            steps {
-                sh 'pwd; ls -al'
-                // sh(script: 'python -m pytest -v --cov=libstore', encoding: 'UTF-8')
+        matrix {
+            axes {
+                axis {
+                    name 'PYTHON_MINOR_VERSION'
+                    values '7', '8', '9', '10'
+                }
+                axis {
+                    name 'ENV_TYPE'
+                    values 'venv', 'conda'
+                }
+            }
+            stages {
+                // stage('InstallDeps') {
+                //     steps {
+                        
+                //     }
+                // }
+                stage('Test') {
+                    steps {
+                        echo "Test on Python 3.${PYTHON_MINOR_VERSION} using ${ENV_TYPE}"
+                        // sh 'pwd; ls -al'
+                        // sh(script: 'python -m pytest -v --cov=libstore', encoding: 'UTF-8')
+                    }
+                }
             }
         }
     }
