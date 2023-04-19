@@ -6,13 +6,22 @@ pipeline {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ericjohnberquist', keyFileVariable: '')]) {
                     dir('libstore') {
-                        git 'git@github.com:berquist/libstore.git'
+                        checkout scmGit(
+                            branches: [[name: '*/master']],
+                            extensions: [cleanBeforeCheckout()],
+                            userRemoteConfigs: [[url: 'git@github.com:berquist/libstore.git']])
                     }
                     dir('libjournal') {
-                        git 'git@github.com:berquist/libjournal.git'
+                        checkout scmGit(
+                            branches: [[name: '*/master']],
+                            extensions: [cleanBeforeCheckout()],
+                            userRemoteConfigs: [[url: 'git@github.com:berquist/libjournal.git']])
                     }
                     dir('libarchive') {
-                        git 'git@github.com:berquist/libarchive.git'
+                        checkout scmGit(
+                            branches: [[name: '*/master']],
+                            extensions: [cleanBeforeCheckout()],
+                            userRemoteConfigs: [[url: 'git@github.com:berquist/libarchive.git']])
                     }
                 }
 
