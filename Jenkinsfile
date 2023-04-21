@@ -71,7 +71,7 @@ pipeline {
                             expression { env.PYTHON_ENV_TYPE == 'venv' }
                         }
                         steps {
-                            sh './install_deps.sh ${PYTHON_ENV_TYPE}'
+                            sh './install_deps.sh ${PYTHON_ENV_TYPE} ${PYTHON_MINOR_VERSION}'
                         }
                     }
                     stage('InstallDepsConda') {
@@ -79,7 +79,7 @@ pipeline {
                             expression { env.PYTHON_ENV_TYPE == 'conda' }
                         }
                         steps {
-                            sh './install_deps.sh ${PYTHON_ENV_TYPE}'
+                            sh './install_deps.sh ${PYTHON_ENV_TYPE} ${PYTHON_MINOR_VERSION}'
                         }
                     }
                     // stage('Test') {

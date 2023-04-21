@@ -4,19 +4,18 @@ set -eu
 
 PYTHON_ENV_TYPE_CONDA="conda"
 PYTHON_ENV_TYPE_VENV="venv"
+PYENV_CONDA_BASE=miniforge3-22.11.1-4
 
-# Variables expected to be inherited from the environment:
-#
-# - PYTHON_MINOR_VERSION: can be either just the minor version ("11") or
-#   include the patch ("11.3")
-
+# must be one of "conda" or "venv"
 PYTHON_ENV_TYPE="${1}"
+# can be either just the minor version ("11") or include the patch ("11.3")
+PYTHON_MINOR_VERSION="${2}"
 
 if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_VENV}" ]; then
     PYENV_VERSION=3."${PYTHON_MINOR_VERSION}"
     "${PYENV_ROOT}"/bin/pyenv install -s "${PYENV_VERSION}"
 elif [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
-    PYENV_VERSION=miniforge3-22.11.1-4
+    PYENV_VERSION="${PYENV_CONDA_BASE}"
 fi
 export PYENV_VERSION
 
