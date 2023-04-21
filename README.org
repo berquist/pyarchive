@@ -1,0 +1,7 @@
+* pyarchive Jenkins support
+
+A set of example Jenkinsfiles for building and testing the Python libstore/libjournal/libarchive prototypes in various ways.
+
+| directory | notes |
+|-----------+-------|
+|           |       |
