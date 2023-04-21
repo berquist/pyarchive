@@ -43,13 +43,15 @@ elif [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
 fi
 export PYENV_VERSION
 
+pyenv versions
+
 # Be a good citizen and provide a nested environment for conda rather than
 # using the base.
-if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
-    command -v conda
-    conda init bash
-    conda list
-fi
+# if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
+    # command -v conda
+    # conda init bash
+    # conda list
+# fi
 # python -m pip install -U pip setuptools
 # python -m pip config list
 # python -m pip install pytest-cov
