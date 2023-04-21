@@ -68,12 +68,7 @@ pipeline {
                     stage('InstallDepsAndTest') {
                         steps {
                             sh """
-                                logname=log-${PYTHON_ENV_TYPE}-${PYTHON_MINOR_VERSION}.txt
-                                # tee overwrites by default (without -a) so this isn't necessary
-                                # [ -f ${logname} ] && rm ${logname}
-                                ./install_deps_and_test.sh ${PYTHON_ENV_TYPE} ${PYTHON_MINOR_VERSION} ${env.WORKSPACE}/libstore | tee ${logname}
-                                ./install_deps_and_test.sh ${PYTHON_ENV_TYPE} ${PYTHON_MINOR_VERSION} ${env.WORKSPACE}/libjournal | tee -a ${logname}
-                                ./install_deps_and_test.sh ${PYTHON_ENV_TYPE} ${PYTHON_MINOR_VERSION} ${env.WORKSPACE}/libarchive | tee -a ${logname}
+                                ./wrapper.sh ${PYTHON_ENV_TYPE} ${PYTHON_MINOR_VERSION} ${env.WORKSPACE}
                             """
                         }
                     }
