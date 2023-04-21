@@ -64,22 +64,12 @@ pipeline {
                         values 'venv', 'conda'
                     }
                 }
-                // agent {
-                //     docker { image "python:3.${PYTHON_MINOR_VERSION}" }
-                // }
                 stages {
-                    stage('InstallDeps') {
+                    stage('InstallDepsAndTest') {
                         steps {
-                            sh './install_deps.sh ${PYTHON_ENV_TYPE} ${PYTHON_MINOR_VERSION}'
+                            sh './install_deps.sh ${PYTHON_ENV_TYPE} ${PYTHON_MINOR_VERSION}' libstore
                         }
                     }
-                    // stage('Test') {
-                    //     steps {
-                    //         // echo "Test on Python 3.${PYTHON_MINOR_VERSION} using ${ENV_TYPE}"
-                    //         // sh 'pwd; ls -al'
-                    //         // sh(script: 'python -m pytest -v --cov=libstore', encoding: 'UTF-8')
-                    //     }
-                    // }
                 }
             }
         }

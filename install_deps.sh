@@ -18,6 +18,7 @@ PYTHON_ENV_TYPE_VENV="venv"
 PYTHON_ENV_TYPE="${1}"
 # can be either just the minor version ("11") or include the patch ("11.3")
 PYTHON_MINOR_VERSION="${2}"
+PACKAGE_NAME="${3}"
 
 if [ "${PYTHON_ENV_TYPE}" != "${PYTHON_ENV_TYPE_CONDA}" ] \
        && [ "${PYTHON_ENV_TYPE}" != "${PYTHON_ENV_TYPE_VENV}" ]; then
@@ -61,8 +62,37 @@ if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
 fi
 
 python -m pip install -U pip setuptools
+# This will not print anything if no configuration settings have been
+# overridden, which is the case by default.
 python -m pip config list
 python -m pip install pytest-cov
+
+# Finally install the package.
+python -m pip install "${PACKAGE_NAME}"
+PACKAGE_INSTALL_DIR=$(python -c "import ${PACKAGE_NAME} as _; print(_.__path__[0])")
+find "${PACKAGE_INSTALL_DIR}" -type f | sort
+# h5py installation style depends on the env type.
+case "${PYTHON_ENV_TYPE}" in
+    "${PYTHON_ENV_TYPE_CONDA}")
+        conda install h5py
+        ;;
+    "${PYTHON_ENV_TYPE_VENV}")
+        python -m pip install h5py
+        ;;
+esac
+
+python -m pip list
+if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
+    conda list
+    conda info
+    conda config --show
+fi
+
+# Testing the installed package requires moving out of the source directory.
+# There are problems with the pytest cache when trying to run from a
+# non-writable dir.
+cd "${HOME}"
+python -m pytest -v --cov="${PACKAGE_NAME}" --cov-report=xml "${PACKAGE_INSTALL_DIR}"
 
 # TODO unset CONDARC
 unset PYENV_VERSION
