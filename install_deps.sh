@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eu
+set -eux
 
 PYTHON_ENV_TYPE_CONDA="conda"
 PYTHON_ENV_TYPE_VENV="venv"
