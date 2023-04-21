@@ -26,13 +26,15 @@ if [ "${PYTHON_ENV_TYPE}" != "${PYTHON_ENV_TYPE_CONDA}" ] \
     exit 1
 fi
 
+python_version=3."${PYTHON_MINOR_VERSION}"
+
 export PATH="${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}"
 
 # Install the desired Python version using pyenv and set its use for this
 # shell process
 # (https://github.com/pyenv/pyenv/issues/492#issuecomment-160488045).
 if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_VENV}" ]; then
-    PYENV_VERSION=3."${PYTHON_MINOR_VERSION}"
+    PYENV_VERSION="${python_version}"
     pyenv install -s "${PYENV_VERSION}"
 elif [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
     # This is the expected conda install mechanism.  You could have installed
@@ -43,17 +45,17 @@ elif [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
 fi
 export PYENV_VERSION
 
-pyenv versions
-
 # Be a good citizen and provide a nested environment for conda rather than
 # using the base.
 if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
-    command -v conda
     conda init bash
-    conda list
+    conda_env_name="pyarchive-${python_version}"
+    conda create -n "${conda_env_name}" python="${python_version}"
+    conda activate "${conda_env_name}"
 fi
-# python -m pip install -U pip setuptools
-# python -m pip config list
-# python -m pip install pytest-cov
+
+python -m pip install -U pip setuptools
+python -m pip config list
+python -m pip install pytest-cov
 
 unset PYENV_VERSION
