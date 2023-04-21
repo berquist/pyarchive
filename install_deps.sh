@@ -48,7 +48,9 @@ export PYENV_VERSION
 # Be a good citizen and provide a nested environment for conda rather than
 # using the base.
 if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
-    conda init bash
+    # We don't `conda init` since that will modify a `~/.bashrc` that will
+    # give us even less environment isolation than we already have...
+    init_conda "${PYENV_CONDA_BASE}"
     conda_env_name="pyarchive-${python_version}"
     conda create -n "${conda_env_name}" python="${python_version}"
     conda activate "${conda_env_name}"
