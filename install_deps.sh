@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# Install the Python version and dependencies for the "pyarchive ecosystem" in
+# the provided Python environment type using pyenv
+# (https://github.com/pyenv/pyenv).  It assumes that pyenv is already
+# available at $PYENV_ROOT.
+#
+# If the environment is supposed to be conda-based, then it must have already
+# been installed via some other mechanism.
 set -eux
 
 PYTHON_ENV_TYPE_CONDA="conda"
@@ -19,23 +26,29 @@ if [ "${PYTHON_ENV_TYPE}" != "${PYTHON_ENV_TYPE_CONDA}" ] \
     exit 1
 fi
 
-# Install the desired Python version using pyenv.  If the environment is
-# supposed to be conda-based, then it must have already been installed via
-# some other mechanism..
+export PATH="${PYENV_ROOT}/bin:${PATH}"
+
+# Install the desired Python version using pyenv and set its use for this
+# shell process
+# (https://github.com/pyenv/pyenv/issues/492#issuecomment-160488045).
 if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_VENV}" ]; then
     PYENV_VERSION=3."${PYTHON_MINOR_VERSION}"
-    "${PYENV_ROOT}"/bin/pyenv install -s "${PYENV_VERSION}"
+    pyenv install -s "${PYENV_VERSION}"
 elif [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
-    # This is the expected install mechanism.  You could have installed it via
-    # another nefarious way, but this provides a sort of provenance to show
-    # what "base" conda version you might expect.
+    # This is the expected conda install mechanism.  You could have installed
+    # it via another nefarious way, but this provides a sort of provenance to
+    # show what "base" conda version you might expect.
     [ -f ./install_base_conda.sh ] || exit 1
     PYENV_VERSION="${PYENV_CONDA_BASE}"
 fi
 export PYENV_VERSION
 
+# Be a good citizen and provide a nested environment for conda rather than
+# using the base.
 if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
     command -v conda
+    conda init bash
+    conda list
 fi
 # python -m pip install -U pip setuptools
 # python -m pip config list
