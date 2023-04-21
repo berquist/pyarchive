@@ -20,14 +20,11 @@ elif [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
 fi
 export PYENV_VERSION
 
-# "${PYENV_ROOT}"/bin/pyenv init
-# if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_VENV}" ]; then
-#     "${PYENV_ROOT}"/bin/pyenv shell 3."${PYTHON_MINOR_VERSION}"
-# elif [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
-#     "${PYENV_ROOT}"/bin/pyenv shell miniforge3-22.11.1-4
-# fi
+if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
+    command -v conda
+fi
 # python -m pip install -U pip setuptools
-python -m pip config list
+# python -m pip config list
 # python -m pip install pytest-cov
 
 unset PYENV_VERSION

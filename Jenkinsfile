@@ -66,18 +66,7 @@ pipeline {
                 //     docker { image "python:3.${PYTHON_MINOR_VERSION}" }
                 // }
                 stages {
-                    stage('InstallDepsVenv') {
-                        when {
-                            expression { env.PYTHON_ENV_TYPE == 'venv' }
-                        }
-                        steps {
-                            sh './install_deps.sh ${PYTHON_ENV_TYPE} ${PYTHON_MINOR_VERSION}'
-                        }
-                    }
-                    stage('InstallDepsConda') {
-                        when {
-                            expression { env.PYTHON_ENV_TYPE == 'conda' }
-                        }
+                    stage('InstallDeps') {
                         steps {
                             sh './install_deps.sh ${PYTHON_ENV_TYPE} ${PYTHON_MINOR_VERSION}'
                         }
