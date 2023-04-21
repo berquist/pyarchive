@@ -30,7 +30,6 @@ if [ "${PYTHON_ENV_TYPE}" != "${PYTHON_ENV_TYPE_CONDA}" ] \
 fi
 
 python_version=3."${PYTHON_MINOR_VERSION}"
-package_name=$(basename "${PACKAGE_PATH}")
 
 export PATH="${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}"
 
@@ -70,32 +69,40 @@ python -m pip install -U pip setuptools
 python -m pip config list
 python -m pip install pytest-cov
 
-# Finally install the package.
-python -m pip install "${PACKAGE_PATH}"
-PACKAGE_INSTALL_DIR=$(python -c "import ${package_name} as _; print(_.__path__[0])")
-find "${PACKAGE_INSTALL_DIR}" -type f | sort
-# h5py installation style depends on the env type.
-case "${PYTHON_ENV_TYPE}" in
-    "${PYTHON_ENV_TYPE_CONDA}")
-        conda install h5py
-        ;;
-    "${PYTHON_ENV_TYPE_VENV}")
-        python -m pip install h5py
-        ;;
-esac
+install_and_test_package() {
+    _PACKAGE_PATH="${1}"
 
-python -m pip list
-if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
-    conda list
-    conda info
-    conda config --show
-fi
+    package_name=$(basename "${_PACKAGE_PATH}")
 
-# Testing the installed package requires moving out of the source directory.
-# There are problems with the pytest cache when trying to run from a
-# non-writable dir.
-cd "${HOME}"
-python -m pytest -v --cov="${package_name}" --cov-report=xml "${PACKAGE_INSTALL_DIR}"
+    # Finally install the package.
+    python -m pip install "${_PACKAGE_PATH}"
+    PACKAGE_INSTALL_DIR=$(python -c "import ${package_name} as _; print(_.__path__[0])")
+    find "${PACKAGE_INSTALL_DIR}" -type f | sort
+    # h5py installation style depends on the env type.
+    case "${PYTHON_ENV_TYPE}" in
+        "${PYTHON_ENV_TYPE_CONDA}")
+            conda install h5py
+            ;;
+        "${PYTHON_ENV_TYPE_VENV}")
+            python -m pip install h5py
+            ;;
+    esac
+
+    python -m pip list
+    if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
+        conda list
+        conda info
+        conda config --show
+    fi
+
+    # Testing the installed package requires moving out of the source directory.
+    # There are problems with the pytest cache when trying to run from a
+    # non-writable dir.
+    cd "${HOME}"
+    python -m pytest -v --cov="${package_name}" --cov-report=xml "${PACKAGE_INSTALL_DIR}"
+}
+
+install_and_test_package "${PACKAGE_PATH}"
 
 # TODO unset CONDARC
 unset PYENV_VERSION
