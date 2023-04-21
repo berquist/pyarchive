@@ -44,6 +44,10 @@ pipeline {
                         extensions: [],
                         userRemoteConfigs: [[url: 'https://github.com/pyenv/pyenv.git']])
                 }
+                // Slightly wasteful to always have conda installed, but for
+                // now it's easier than writing soup to avoid problems from
+                // attempting parallel installs.
+                sh './install_base_conda.sh'
             }
         }
         stage('InstallAndTest') {
@@ -67,7 +71,7 @@ pipeline {
                             expression { env.PYTHON_ENV_TYPE == 'venv' }
                         }
                         steps {
-                            sh '${PYENV_ROOT}/bin/pyenv install -s 3.${PYTHON_MINOR_VERSION}'
+                            sh './install_deps_venv.sh'
                         }
                     }
                     stage('InstallDepsConda') {
@@ -75,8 +79,7 @@ pipeline {
                             expression { env.PYTHON_ENV_TYPE == 'conda' }
                         }
                         steps {
-                            sh '${PYENV_ROOT}/bin/pyenv install -s miniforge3-22.11.1-4'
-                            sh '${PYENV_ROOT}/bin/pyenv activate miniforge3-22.11.1-4'
+                            sh './install_deps_conda.sh'
                         }
                     }
                     // stage('Test') {
