@@ -31,3 +31,9 @@ init_conda() {
 
     unset pyenv_conda_base
 }
+
+# Does the conda environment with the given name exist?
+# (https://stackoverflow.com/q/70597896)
+conda_env_exists() {
+    conda info --envs | grep -q "${1}"
+}
