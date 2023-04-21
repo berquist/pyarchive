@@ -67,7 +67,11 @@ pipeline {
                 stages {
                     stage('InstallDepsAndTest') {
                         steps {
-                            sh """./install_deps.sh ${PYTHON_ENV_TYPE} ${PYTHON_MINOR_VERSION} ${env.WORKSPACE}/libstore | tee log-${PYTHON_ENV_TYPE}-${PYTHON_MINOR_VERSION}.txt"""
+                            sh """
+                                logname=log-${PYTHON_ENV_TYPE}-${PYTHON_MINOR_VERSION}.txt
+                                [ -f ${logname} ] && rm ${logname}
+                                ./install_deps.sh ${PYTHON_ENV_TYPE} ${PYTHON_MINOR_VERSION} ${env.WORKSPACE}/libstore | tee log-${PYTHON_ENV_TYPE}-${PYTHON_MINOR_VERSION}.txt
+                            """
                         }
                     }
                 }
