@@ -6,3 +6,4 @@ channels:
   - defaults
 changeps1: false
 report_errors: true
+use_only_tar_bz2: true
