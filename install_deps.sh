@@ -12,6 +12,13 @@ PYTHON_ENV_TYPE="${1}"
 # can be either just the minor version ("11") or include the patch ("11.3")
 PYTHON_MINOR_VERSION="${2}"
 
+if [ "${PYTHON_ENV_TYPE}" != "${PYTHON_ENV_TYPE_CONDA}" ] \
+       && [ "${PYTHON_ENV_TYPE}" != "${PYTHON_ENV_TYPE_VENV}" ]; then
+    echo "PYTHON_ENV_TYPE (arg 1) must be \"${PYTHON_ENV_TYPE_CONDA}\" or \"${PYTHON_ENV_TYPE_VENV}\"," >&2
+    echo "not \"${PYTHON_ENV_TYPE}\"" >&2
+    exit 1
+fi
+
 if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_VENV}" ]; then
     PYENV_VERSION=3."${PYTHON_MINOR_VERSION}"
     "${PYENV_ROOT}"/bin/pyenv install -s "${PYENV_VERSION}"
