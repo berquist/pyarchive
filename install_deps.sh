@@ -4,7 +4,8 @@ set -eu
 
 PYTHON_ENV_TYPE_CONDA="conda"
 PYTHON_ENV_TYPE_VENV="venv"
-PYENV_CONDA_BASE=miniforge3-22.11.1-4
+
+. ./common.sh
 
 # must be one of "conda" or "venv"
 PYTHON_ENV_TYPE="${1}"

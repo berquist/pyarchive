@@ -2,4 +2,6 @@
 
 set -eu
 
-"${PYENV_ROOT}"/bin/pyenv install -s miniforge3-22.11.1-4
+. ./common.sh
+
+"${PYENV_ROOT}"/bin/pyenv install -s "${PYENV_CONDA_BASE}"
