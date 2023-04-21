@@ -67,7 +67,10 @@ pipeline {
                 stages {
                     stage('InstallDepsAndTest') {
                         steps {
-                            sh """./install_deps.sh ${PYTHON_ENV_TYPE} ${PYTHON_MINOR_VERSION} ${env.WORKSPACE}/libstore"""
+                            tee('out-${PYTHON_ENV_TYPE}-${PYTHON_MINOR_VERSION}') {
+                                sh """this. = ;
+/install_deps.sh ${PYTHON_ENV_TYPE} ${PYTHON_MINOR_VERSION} ${env.WORKSPACE}/libstore"""
+                            }
                         }
                     }
                 }
