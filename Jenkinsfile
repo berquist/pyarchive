@@ -64,22 +64,18 @@ pipeline {
                 stages {
                     stage('InstallDepsVenv') {
                         when {
-                            expression {
-                                env.PYTHON_ENV_TYPE == 'venv'
-                            }
+                            expression { env.PYTHON_ENV_TYPE == 'venv' }
                         }
                         steps {
-                            sh '${PYENV_ROOT}/bin/pyenv install 3.${PYTHON_MINOR_VERSION}'
+                            sh '${PYENV_ROOT}/bin/pyenv install -s 3.${PYTHON_MINOR_VERSION}'
                         }
                     }
                     stage('InstallDepsConda') {
                         when {
-                            expression {
-                                env.PYTHON_ENV_TYPE == 'conda'
-                            }
+                            expression { env.PYTHON_ENV_TYPE == 'conda' }
                         }
                         steps {
-                            sh '${PYENV_ROOT}/bin/pyenv install miniforge3-22.11.1-4'
+                            sh '${PYENV_ROOT}/bin/pyenv install -s miniforge3-22.11.1-4'
                             sh '${PYENV_ROOT}/bin/pyenv activate miniforge3-22.11.1-4'
                         }
                     }
