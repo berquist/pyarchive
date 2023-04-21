@@ -1,5 +1,12 @@
+// This is an example of a pipeline that combines multiple checkouts, installs
+// all dependencies, tests each repository sequentially, and runs on bare
+// metal.
 pipeline {
     agent any
+
+    environment {
+        PYENV_ROOT = "${env.WORKSPACE}/pyenv"
+    }
 
     stages {
         stage('Checkout') {
@@ -11,12 +18,14 @@ pipeline {
                             extensions: [cleanBeforeCheckout()],
                             userRemoteConfigs: [[url: 'git@github.com:berquist/libstore.git']])
                     }
+                    // libjournal depends on libstore.
                     dir('libjournal') {
                         checkout scmGit(
                             branches: [[name: '*/master']],
                             extensions: [cleanBeforeCheckout()],
                             userRemoteConfigs: [[url: 'git@github.com:berquist/libjournal.git']])
                     }
+                    // libarchive depends on libjournal.
                     dir('libarchive') {
                         checkout scmGit(
                             branches: [[name: '*/master']],
@@ -28,9 +37,6 @@ pipeline {
             }
         }
         stage('InstallBaseDeps') {
-            environment {
-                PYENV_ROOT = "${env.WORKSPACE}/pyenv"
-            }
             steps {
                 dir('pyenv') {
                     checkout scmGit(
@@ -64,6 +70,17 @@ pipeline {
                         }
                         steps {
                             sh '${PYENV_ROOT}/bin/pyenv install 3.${PYTHON_MINOR_VERSION}'
+                        }
+                    }
+                    stage('InstallDepsConda') {
+                        when {
+                            expression {
+                                env.PYTHON_ENV_TYPE == 'conda'
+                            }
+                        }
+                        steps {
+                            sh '${PYENV_ROOT}/bin/pyenv install miniforge3-22.11.1-4'
+                            sh '${PYENV_ROOT}/bin/pyenv activate miniforge3-22.11.1-4'
                         }
                     }
                     // stage('Test') {
