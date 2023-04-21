@@ -55,7 +55,7 @@ pipeline {
                 axes {
                     axis {
                         name 'PYTHON_MINOR_VERSION'
-                        values '7', '8', '9', '10'
+                        values '7.16', '8.16', '9.16', '10.11', '11.3'
                     }
                     axis {
                         name 'PYTHON_ENV_TYPE'
@@ -71,7 +71,7 @@ pipeline {
                             expression { env.PYTHON_ENV_TYPE == 'venv' }
                         }
                         steps {
-                            sh './install_deps_venv.sh'
+                            sh './install_deps.sh ${PYTHON_ENV_TYPE}'
                         }
                     }
                     stage('InstallDepsConda') {
@@ -79,7 +79,7 @@ pipeline {
                             expression { env.PYTHON_ENV_TYPE == 'conda' }
                         }
                         steps {
-                            sh './install_deps_conda.sh'
+                            sh './install_deps.sh ${PYTHON_ENV_TYPE}'
                         }
                     }
                     // stage('Test') {
