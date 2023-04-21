@@ -38,40 +38,43 @@ pipeline {
                         extensions: [],
                         userRemoteConfigs: [[url: 'https://github.com/pyenv/pyenv.git']])
                 }
-                sh 'realpath $PYENV_ROOT'
-                sh 'ls $PYENV_ROOT'
             }
         }
-        // stage('InstallAndTest') {
-        //     matrix {
-        //         axes {
-        //             axis {
-        //                 name 'PYTHON_MINOR_VERSION'
-        //                 values '7', '8', '9', '10'
-        //             }
-        //             // axis {
-        //             //     name 'ENV_TYPE'
-        //             //     values 'venv', 'conda'
-        //             // }
-        //         }
-        //         // agent {
-        //         //     docker { image "python:3.${PYTHON_MINOR_VERSION}" }
-        //         // }
-        //         stages {
-        //             // stage('InstallDeps') {
-        //             //     steps {
-
-        //             //     }
-        //             // }
-        //             stage('Test') {
-        //                 steps {
-        //                     // echo "Test on Python 3.${PYTHON_MINOR_VERSION} using ${ENV_TYPE}"
-        //                     // sh 'pwd; ls -al'
-        //                     // sh(script: 'python -m pytest -v --cov=libstore', encoding: 'UTF-8')
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('InstallAndTest') {
+            matrix {
+                axes {
+                    axis {
+                        name 'PYTHON_MINOR_VERSION'
+                        values '7', '8', '9', '10'
+                    }
+                    axis {
+                        name 'PYTHON_ENV_TYPE'
+                        values 'venv', 'conda'
+                    }
+                }
+                // agent {
+                //     docker { image "python:3.${PYTHON_MINOR_VERSION}" }
+                // }
+                stages {
+                    stage('InstallDepsVenv') {
+                        when {
+                            expression {
+                                env.PYTHON_ENV_TYPE == 'venv'
+                            }
+                        }
+                        steps {
+                            sh '${PYENV_ROOT}/bin/pyenv install 3.${PYTHON_MINOR_VERSION}'
+                        }
+                    }
+                    // stage('Test') {
+                    //     steps {
+                    //         // echo "Test on Python 3.${PYTHON_MINOR_VERSION} using ${ENV_TYPE}"
+                    //         // sh 'pwd; ls -al'
+                    //         // sh(script: 'python -m pytest -v --cov=libstore', encoding: 'UTF-8')
+                    //     }
+                    // }
+                }
+            }
+        }
     }
 }
