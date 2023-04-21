@@ -55,7 +55,9 @@ pipeline {
                 axes {
                     axis {
                         name 'PYTHON_MINOR_VERSION'
-                        values '7.16', '8.16', '9.16', '10.11', '11.3'
+                        // conda-forge lags behind...
+                        // values '7.16', '8.16', '9.16', '10.11', '11.3'
+                        values '7.12', '8.16', '9.16', '10.10', '11.3'
                     }
                     axis {
                         name 'PYTHON_ENV_TYPE'
