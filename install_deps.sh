@@ -18,7 +18,9 @@ PYTHON_ENV_TYPE_VENV="venv"
 PYTHON_ENV_TYPE="${1}"
 # can be either just the minor version ("11") or include the patch ("11.3")
 PYTHON_MINOR_VERSION="${2}"
-PACKAGE_NAME="${3}"
+# absolute path to the Python package being installed; assume the last
+# component (basename) is the Python package name
+PACKAGE_PATH="${3}"
 
 if [ "${PYTHON_ENV_TYPE}" != "${PYTHON_ENV_TYPE_CONDA}" ] \
        && [ "${PYTHON_ENV_TYPE}" != "${PYTHON_ENV_TYPE_VENV}" ]; then
@@ -28,6 +30,7 @@ if [ "${PYTHON_ENV_TYPE}" != "${PYTHON_ENV_TYPE_CONDA}" ] \
 fi
 
 python_version=3."${PYTHON_MINOR_VERSION}"
+package_name=$(basename "${PACKAGE_PATH}")
 
 export PATH="${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}"
 
@@ -68,8 +71,8 @@ python -m pip config list
 python -m pip install pytest-cov
 
 # Finally install the package.
-python -m pip install "${PACKAGE_NAME}"
-PACKAGE_INSTALL_DIR=$(python -c "import ${PACKAGE_NAME} as _; print(_.__path__[0])")
+python -m pip install "${PACKAGE_PATH}"
+PACKAGE_INSTALL_DIR=$(python -c "import ${package_name} as _; print(_.__path__[0])")
 find "${PACKAGE_INSTALL_DIR}" -type f | sort
 # h5py installation style depends on the env type.
 case "${PYTHON_ENV_TYPE}" in
@@ -92,7 +95,7 @@ fi
 # There are problems with the pytest cache when trying to run from a
 # non-writable dir.
 cd "${HOME}"
-python -m pytest -v --cov="${PACKAGE_NAME}" --cov-report=xml "${PACKAGE_INSTALL_DIR}"
+python -m pytest -v --cov="${package_name}" --cov-report=xml "${PACKAGE_INSTALL_DIR}"
 
 # TODO unset CONDARC
 unset PYENV_VERSION
