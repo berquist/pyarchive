@@ -5,7 +5,7 @@ pipeline {
     agent any
 
     environment {
-        PYENV_ROOT = "${env.WORKSPACE}/pyenv"
+        PYENV_ROOT = '${env.WORKSPACE}/pyenv'
     }
 
     stages {

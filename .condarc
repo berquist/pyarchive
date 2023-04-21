@@ -1,0 +1,8 @@
+# -*- mode: yaml -*-
+---
+channels:
+  - psi4
+  - conda-forge
+  - defaults
+changeps1: false
+report_errors: true

@@ -48,6 +48,8 @@ export PYENV_VERSION
 # Be a good citizen and provide a nested environment for conda rather than
 # using the base.
 if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
+    # For some consistency, do not allow a user-provided conda config.
+    export CONDARC="${PWD}/.condarc"
     # We don't `conda init` since that will modify a `~/.bashrc` that will
     # give us even less environment isolation than we already have...
     init_conda "${PYENV_CONDA_BASE}"
@@ -60,4 +62,5 @@ python -m pip install -U pip setuptools
 python -m pip config list
 python -m pip install pytest-cov
 
+# TODO unset CONDARC
 unset PYENV_VERSION
