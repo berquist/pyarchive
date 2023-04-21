@@ -26,7 +26,7 @@ if [ "${PYTHON_ENV_TYPE}" != "${PYTHON_ENV_TYPE_CONDA}" ] \
     exit 1
 fi
 
-export PATH="${PYENV_ROOT}/bin:${PATH}"
+export PATH="${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}"
 
 # Install the desired Python version using pyenv and set its use for this
 # shell process
@@ -47,11 +47,11 @@ pyenv versions
 
 # Be a good citizen and provide a nested environment for conda rather than
 # using the base.
-# if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
-    # command -v conda
-    # conda init bash
-    # conda list
-# fi
+if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
+    command -v conda
+    conda init bash
+    conda list
+fi
 # python -m pip install -U pip setuptools
 # python -m pip config list
 # python -m pip install pytest-cov
