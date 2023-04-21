@@ -28,14 +28,18 @@ pipeline {
             }
         }
         stage('InstallBaseDeps') {
-            // environment {
-            //     PYENV_ROOT = ''
-            // }
+            environment {
+                PYENV_ROOT = "${env.WORKSPACE}/pyenv"
+            }
             steps {
-                checkout scmGit(
-                    branches: [[name: 'refs/tags/v2.3.17']],
-                    extensions: [],
-                    userRemoteConfigs: [[url: 'https://github.com/pyenv/pyenv.git']])
+                dir('pyenv') {
+                    checkout scmGit(
+                        branches: [[name: 'refs/tags/v2.3.17']],
+                        extensions: [],
+                        userRemoteConfigs: [[url: 'https://github.com/pyenv/pyenv.git']])
+                }
+                sh 'realpath $PYENV_ROOT'
+                sh 'ls $PYENV_ROOT'
             }
         }
         // stage('InstallAndTest') {
