@@ -14,5 +14,12 @@ rm "${logname}" || tmp=$?
 # order matters!
 # libarchive has been removed as long as it is broken
 for package in libstore libjournal; do
-    ./install_deps_and_test.sh "${PYTHON_ENV_TYPE}" "${PYTHON_MINOR_VERSION}" "${PACKAGE_BASE_PATH}/${package}" | tee -a "${logname}"
+    set +e
+    (
+        set -e
+        ./install_deps_and_test.sh "${PYTHON_ENV_TYPE}" "${PYTHON_MINOR_VERSION}" "${PACKAGE_BASE_PATH}/${package}"
+    )
+    err_status=$?
+    set -e
+    [ $err_status -eq 0 ] || exit $err_status
 done
