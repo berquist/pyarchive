@@ -55,7 +55,12 @@ if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
     export CONDARC="${PWD}/.condarc"
     # We don't `conda init` since that will modify a `~/.bashrc` that will
     # give us even less environment isolation than we already have...
-    set +e; (set -e; init_conda "${PYENV_CONDA_BASE}"); err_status=$?; set -e; [ $err_status -eq 0 ] || exit $err_status
+    # set +e; (set -e; init_conda "${PYENV_CONDA_BASE}"); err_status=$?; set -e; [ $err_status -eq 0 ] || exit $err_status
+    #
+    # TODO the above catches errors thrown by internal conda functions.  It is
+    # unlikely there is anything wrong with *our* function, but is it ok to
+    # skip out on checking it?
+    init_conda "${PYENV_CONDA_BASE}"
     conda_env_name="pyarchive-${python_version}"
     if test ! conda_env_exists "${conda_env_name}"; then
         conda create -y -n "${conda_env_name}" python="${python_version}"
