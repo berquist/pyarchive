@@ -2,6 +2,6 @@
 
 A set of example Jenkinsfiles for building and testing the Python libstore/libjournal/libarchive prototypes in various ways.
 
-| directory | notes |
-|-----------+-------|
-|           |       |
+** no-parameters
+
+The pipeline takes no parameters and all branches are fixed at =main=.
