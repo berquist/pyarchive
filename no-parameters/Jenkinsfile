@@ -9,9 +9,9 @@ pipeline {
         PYENV_ROOT = "${env.WORKSPACE}/pyenv"
     }
 
-    // options {
-    //     parallelsAlwaysFailFast()
-    // }
+    options {
+        parallelsAlwaysFailFast()
+    }
 
     stages {
         stage('Checkout') {
