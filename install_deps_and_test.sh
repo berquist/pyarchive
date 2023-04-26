@@ -55,7 +55,7 @@ if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
     export CONDARC="${PWD}/.condarc"
     # We don't `conda init` since that will modify a `~/.bashrc` that will
     # give us even less environment isolation than we already have...
-    init_conda "${PYENV_CONDA_BASE}" || return
+    set +e; (set -e; init_conda "${PYENV_CONDA_BASE}"); err_status=$?; set -e; [ $err_status -eq 0 ] || exit $err_status
     conda_env_name="pyarchive-${python_version}"
     if test ! conda_env_exists "${conda_env_name}"; then
         conda create -y -n "${conda_env_name}" python="${python_version}"
@@ -103,7 +103,7 @@ install_and_test_package() {
     python -m pytest -v --cov="${package_name}" --cov-report=xml "${PACKAGE_INSTALL_DIR}"
 }
 
-install_and_test_package "${PACKAGE_PATH}" || return
+set +e; (set -e; install_and_test_package "${PACKAGE_PATH}"); err_status=$?; set -e; [ $err_status -eq 0 ] || exit $err_status
 
 # TODO unset CONDARC
 unset PYENV_VERSION
