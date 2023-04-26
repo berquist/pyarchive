@@ -5,6 +5,7 @@ pipeline {
     agent any
 
     environment {
+        PY_COLORS = 0
         PYENV_ROOT = "${env.WORKSPACE}/pyenv"
     }
 
