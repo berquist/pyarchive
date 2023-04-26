@@ -55,7 +55,7 @@ if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
     export CONDARC="${PWD}/.condarc"
     # We don't `conda init` since that will modify a `~/.bashrc` that will
     # give us even less environment isolation than we already have...
-    init_conda "${PYENV_CONDA_BASE}"
+    init_conda "${PYENV_CONDA_BASE}" || return
     conda_env_name="pyarchive-${python_version}"
     if test ! conda_env_exists "${conda_env_name}"; then
         conda create -y -n "${conda_env_name}" python="${python_version}"
@@ -79,6 +79,7 @@ install_and_test_package() {
     PACKAGE_INSTALL_DIR=$(python -c "import ${package_name} as _; print(_.__path__[0])")
     find "${PACKAGE_INSTALL_DIR}" -type f | sort
     # h5py installation style depends on the env type.
+    # TODO why is this after package installation?
     case "${PYTHON_ENV_TYPE}" in
         "${PYTHON_ENV_TYPE_CONDA}")
             conda install h5py
@@ -102,7 +103,7 @@ install_and_test_package() {
     python -m pytest -v --cov="${package_name}" --cov-report=xml "${PACKAGE_INSTALL_DIR}"
 }
 
-install_and_test_package "${PACKAGE_PATH}"
+install_and_test_package "${PACKAGE_PATH}" || return
 
 # TODO unset CONDARC
 unset PYENV_VERSION
