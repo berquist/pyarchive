@@ -38,7 +38,6 @@ pipeline {
                             userRemoteConfigs: [[url: 'git@github.com:berquist/libarchive.git']])
                     }
                 }
-
             }
         }
         stage('InstallBaseDeps') {
