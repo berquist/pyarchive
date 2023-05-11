@@ -2,6 +2,12 @@
 
 A set of example Jenkinsfiles for building and testing the Python libstore/libjournal/libarchive prototypes in various ways.
 
-** no-parameters
+** no-parameters-posix-sh
 
-The pipeline takes no parameters and all branches are fixed at =main=.
+- The pipeline takes no parameters and all branches are fixed at =main=.
+- The main scripts called by Jenkins are written in POSIX sh.
+
+** no-parameters-bash
+
+- The pipeline takes no parameters and all branches are fixed at =main=.
+- The main scripts called by Jenkins are written in bash, not POSIX sh.
