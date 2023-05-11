@@ -19,7 +19,7 @@ for package in libstore; do
     set +e
     (
         set -e
-        ./install_deps_and_test.bash "${PYTHON_ENV_TYPE}" "${PYTHON_MINOR_VERSION}" "${PACKAGE_BASE_PATH}/${package}" | tee "${logname}"
+        ./install_deps_and_test.bash "${PYTHON_ENV_TYPE}" "${PYTHON_MINOR_VERSION}" "${PACKAGE_BASE_PATH}/${package}" | tee -a "${logname}"
     )
     err_status=$?
     set -e
