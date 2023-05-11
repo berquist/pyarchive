@@ -13,7 +13,8 @@ logname="log-${PYTHON_ENV_TYPE}-${PYTHON_MINOR_VERSION}.txt"
 rm "${logname}" || tmp=$?
 # order matters!
 # libarchive has been removed as long as it is broken
-for package in libstore libjournal; do
+# something else is wrong with libjournal
+for package in libstore; do
     set +e
     (
         set -e
