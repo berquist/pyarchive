@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Install the Python version and dependencies for the "pyarchive ecosystem" in
 # the provided Python environment type using pyenv
@@ -7,7 +7,7 @@
 #
 # If the environment is supposed to be conda-based, then it must have already
 # been installed via some other mechanism.
-set -eu
+set -euo pipefail
 set -x
 
 PYTHON_ENV_TYPE_CONDA="conda"
@@ -23,8 +23,8 @@ PYTHON_MINOR_VERSION="${2}"
 # component (basename) is the Python package name
 PACKAGE_PATH="${3}"
 
-if [ "${PYTHON_ENV_TYPE}" != "${PYTHON_ENV_TYPE_CONDA}" ] \
-       && [ "${PYTHON_ENV_TYPE}" != "${PYTHON_ENV_TYPE_VENV}" ]; then
+if [[ "${PYTHON_ENV_TYPE}" != "${PYTHON_ENV_TYPE_CONDA}" ]] \
+       && [[ "${PYTHON_ENV_TYPE}" != "${PYTHON_ENV_TYPE_VENV}" ]]; then
     echo "PYTHON_ENV_TYPE (arg 1) must be \"${PYTHON_ENV_TYPE_CONDA}\" or \"${PYTHON_ENV_TYPE_VENV}\"," >&2
     echo "not \"${PYTHON_ENV_TYPE}\"" >&2
     exit 1
@@ -37,21 +37,21 @@ export PATH="${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}"
 # Install the desired Python version using pyenv and set its use for this
 # shell process
 # (https://github.com/pyenv/pyenv/issues/492#issuecomment-160488045).
-if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_VENV}" ]; then
+if [[ "${PYTHON_ENV_TYPE}" == "${PYTHON_ENV_TYPE_VENV}" ]]; then
     PYENV_VERSION="${python_version}"
     pyenv install -s "${PYENV_VERSION}"
-elif [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
+elif [[ "${PYTHON_ENV_TYPE}" == "${PYTHON_ENV_TYPE_CONDA}" ]]; then
     # This is the expected conda install mechanism.  You could have installed
     # it via another nefarious way, but this provides a sort of provenance to
     # show what "base" conda version you might expect.
-    [ -f ./install_base_conda.sh ] || exit 1
+    [[ -f ./install_base_conda.sh ]] || exit 1
     PYENV_VERSION="${PYENV_CONDA_BASE}"
 fi
 export PYENV_VERSION
 
 # Be a good citizen and provide a nested environment for conda rather than
 # using the base.
-if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
+if [[ "${PYTHON_ENV_TYPE}" == "${PYTHON_ENV_TYPE_CONDA}" ]]; then
     # For some consistency, do not allow a user-provided conda config.
     export CONDARC="${PWD}/.condarc"
     # We don't `conda init` since that will modify a `~/.bashrc` that will
@@ -76,12 +76,14 @@ python -m pip config list
 python -m pip install pytest-cov
 
 install_and_test_package() {
-    _PACKAGE_PATH="${1}"
+    local _PACKAGE_PATH="${1}"
 
+    local package_name
     package_name=$(basename "${_PACKAGE_PATH}")
 
     # Finally install the package.
     python -m pip install "${_PACKAGE_PATH}"
+    local PACKAGE_INSTALL_DIR
     PACKAGE_INSTALL_DIR=$(python -c "import ${package_name} as _; print(_.__path__[0])")
     find "${PACKAGE_INSTALL_DIR}" -type f | sort
     # h5py installation style depends on the env type.
@@ -96,7 +98,7 @@ install_and_test_package() {
     esac
 
     python -m pip list
-    if [ "${PYTHON_ENV_TYPE}" = "${PYTHON_ENV_TYPE_CONDA}" ]; then
+    if [[ "${PYTHON_ENV_TYPE}" == "${PYTHON_ENV_TYPE_CONDA}" ]]; then
         conda list
         conda info
         conda config --show
