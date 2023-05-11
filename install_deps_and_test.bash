@@ -13,7 +13,7 @@ set -x
 PYTHON_ENV_TYPE_CONDA="conda"
 PYTHON_ENV_TYPE_VENV="venv"
 
-. ./common.sh
+. ./common.bash
 
 # must be one of "conda" or "venv"
 PYTHON_ENV_TYPE="${1}"
