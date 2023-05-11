@@ -84,10 +84,10 @@ install_and_test_package() {
     # Finally install the package.  Avoid concurrent process race conditions
     # by not using a generic (wheel) build location.
     python -m pip wheel \
-           --build-option --bdist-dir "${_PACKAGE_PATH}/build_${PYTHON_ENV_TYPE}_${python_version}" \
+           --build-option="--bdist-dir=\"${_PACKAGE_PATH}/build_${PYTHON_ENV_TYPE}_${python_version}\"" \
            -w "${_PACKAGE_PATH}/wheels" \
            "${_PACKAGE_PATH}"
-    python -m pip install "${_PACKAGE_PATH}/wheels"
+    python -m pip install "${_PACKAGE_PATH}/wheels/*.whl"
     local PACKAGE_INSTALL_DIR
     PACKAGE_INSTALL_DIR=$(python -c "import ${package_name} as _; print(_.__path__[0])")
     find "${PACKAGE_INSTALL_DIR}" -type f | sort
