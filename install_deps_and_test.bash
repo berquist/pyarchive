@@ -63,7 +63,7 @@ if [[ "${PYTHON_ENV_TYPE}" == "${PYTHON_ENV_TYPE_CONDA}" ]]; then
     # skip out on checking it?
     init_conda "${PYENV_CONDA_BASE}"
     conda_env_name="pyarchive-${python_version}"
-    if ! test conda_env_exists "${conda_env_name}"; then
+    if ! conda_env_exists "${conda_env_name}"; then
         conda create -y -n "${conda_env_name}" python="${python_version}"
     fi
     conda activate "${conda_env_name}"

@@ -37,4 +37,5 @@ init_conda() {
 # (https://stackoverflow.com/q/70597896)
 conda_env_exists() {
     conda info --envs | grep -q "${1}"
+    return $?
 }
