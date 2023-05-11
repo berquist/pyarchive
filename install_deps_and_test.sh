@@ -80,8 +80,9 @@ install_and_test_package() {
 
     package_name=$(basename "${_PACKAGE_PATH}")
 
-    # Finally install the package.
-    python -m pip install "${_PACKAGE_PATH}"
+    # Finally install the package.  Don't clean the build directory in order
+    # to stop a concurrent process from trying to remove it.
+    python -m pip install --no-clean "${_PACKAGE_PATH}"
     PACKAGE_INSTALL_DIR=$(python -c "import ${package_name} as _; print(_.__path__[0])")
     find "${PACKAGE_INSTALL_DIR}" -type f | sort
     # h5py installation style depends on the env type.
