@@ -62,7 +62,7 @@ pipeline {
                         // conda-forge lags behind...
                         // values '7.16', '8.16', '9.16', '10.11', '11.3'
                         // values '7.12', '8.16', '9.16', '10.10', '11.3'
-                        values '10.01'
+                        values '10.10'
                     }
                     axis {
                         name 'PYTHON_ENV_TYPE'
