@@ -51,7 +51,7 @@ pipeline {
             steps {
                 dir('pyenv') {
                     checkout scmGit(
-                        branches: [[name: 'refs/tags/v2.3.17']],
+                        branches: [[name: 'refs/tags/v2.3.32']],
                         extensions: [],
                         userRemoteConfigs: [[url: 'https://github.com/pyenv/pyenv.git']])
                 }
