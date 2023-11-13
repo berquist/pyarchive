@@ -16,27 +16,34 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'ericjohnberquist', keyFileVariable: '')]) {
-                    dir('libstore') {
-                        checkout scmGit(
-                            branches: [[name: '*/master']],
-                            extensions: [cleanBeforeCheckout()],
-                            userRemoteConfigs: [[url: 'git@github.com:berquist/libstore.git']])
-                    }
-                    // libjournal depends on libstore.
-                    dir('libjournal') {
-                        checkout scmGit(
-                            branches: [[name: '*/master']],
-                            extensions: [cleanBeforeCheckout()],
-                            userRemoteConfigs: [[url: 'git@github.com:berquist/libjournal.git']])
-                    }
-                    // libarchive depends on libjournal.
-                    dir('libarchive') {
-                        checkout scmGit(
-                            branches: [[name: '*/master']],
-                            extensions: [cleanBeforeCheckout()],
-                            userRemoteConfigs: [[url: 'git@github.com:berquist/libarchive.git']])
-                    }
+                dir('libstore') {
+                    checkout scmGit(
+                        branches: [[name: '*/master']],
+                        extensions: [cleanBeforeCheckout()],
+                        userRemoteConfigs: [[
+                            credentialsId: 'ericjohnberquist',
+                            url: 'git@github.com:berquist/libstore.git'
+                        ]])
+                }
+                // libjournal depends on libstore.
+                dir('libjournal') {
+                    checkout scmGit(
+                        branches: [[name: '*/master']],
+                        extensions: [cleanBeforeCheckout()],
+                        userRemoteConfigs: [[
+                            credentialsId: 'ericjohnberquist',
+                            url: 'git@github.com:berquist/libjournal.git'
+                        ]])
+                }
+                // libarchive depends on libjournal.
+                dir('libarchive') {
+                    checkout scmGit(
+                        branches: [[name: '*/master']],
+                        extensions: [cleanBeforeCheckout()],
+                        userRemoteConfigs: [[
+                            credentialsId: 'ericjohnberquist',
+                            url: 'git@github.com:berquist/libarchive.git'
+                        ]])
                 }
             }
         }
