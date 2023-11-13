@@ -5,6 +5,7 @@ pipeline {
     agent any
 
     environment {
+        _jenkins_credentials_id = 'ericjohnberquist'
         PY_COLORS = 0
         PYENV_ROOT = "${env.WORKSPACE}/pyenv"
     }
@@ -21,7 +22,7 @@ pipeline {
                         branches: [[name: '*/master']],
                         extensions: [cleanBeforeCheckout()],
                         userRemoteConfigs: [[
-                            credentialsId: 'ericjohnberquist',
+                            credentialsId: "${_jenkins_credentials_id}",
                             url: 'git@github.com:berquist/libstore.git'
                         ]])
                 }
@@ -31,7 +32,7 @@ pipeline {
                         branches: [[name: '*/master']],
                         extensions: [cleanBeforeCheckout()],
                         userRemoteConfigs: [[
-                            credentialsId: 'ericjohnberquist',
+                            credentialsId: "${_jenkins_credentials_id}",
                             url: 'git@github.com:berquist/libjournal.git'
                         ]])
                 }
@@ -41,8 +42,18 @@ pipeline {
                         branches: [[name: '*/master']],
                         extensions: [cleanBeforeCheckout()],
                         userRemoteConfigs: [[
-                            credentialsId: 'ericjohnberquist',
+                            credentialsId: "${_jenkins_credentials_id}",
                             url: 'git@github.com:berquist/libarchive.git'
+                        ]])
+                }
+                // qcwrap depends on at least libjournal.
+                dir('qcwrap') {
+                    checkout scmGit(
+                        branches: [[name: '*/master']],
+                        extensions: [cleanBeforeCheckout()],
+                        userRemoteConfigs: [[
+                            credentialsId: "${_jenkins_credentials_id}",
+                            url: 'git@github.com:berquist/qcwrap.git'
                         ]])
                 }
             }

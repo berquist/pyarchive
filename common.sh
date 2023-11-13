@@ -22,6 +22,7 @@ init_conda() {
         else
             conda_sh_loc="${conda_base}/etc/profile.d/conda.sh"
             if [ -f "${conda_sh_loc}" ]; then
+                # shellcheck disable=SC1090
                 . "${conda_sh_loc}"
             else
                 export PATH="${conda_base}/bin:$PATH"
